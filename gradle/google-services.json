@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1077392803715",
+    "firebase_url": "https://fir-fcm-7beb3.firebaseio.com",
+    "project_id": "fir-fcm-7beb3",
+    "storage_bucket": "fir-fcm-7beb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077392803715:android:84c99618d651705b",
+        "android_client_info": {
+          "package_name": "com.venture.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077392803715-bbi0jc66q52lptrejprgjg3ntl4ikn1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyUZf39wa7WHi_qBMO_0ZTFN7P3P3jgXo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

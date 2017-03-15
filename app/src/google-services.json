@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "207833212930",
+    "firebase_url": "https://fir-fcm-f186d.firebaseio.com",
+    "project_id": "fir-fcm-f186d",
+    "storage_bucket": "fir-fcm-f186d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:207833212930:android:0c304db96e312624",
+        "android_client_info": {
+          "package_name": "com.venture.android.firebasefcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "207833212930-1rbvg0b8852cfu8qqdv8v15nvvuhbmv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtNzWbRxUyUE8KkE4sO2DO09ad56Shz0M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
