@@ -1,6 +1,7 @@
 package com.venture.android.firebasefcm;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,6 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +45,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 데이터베이스 연결
+        // Firebase 연결
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("user");
 
-        // 위젯
+        // 버튼 연결
         editId = (EditText) findViewById(R.id.editId);
         editPw = (EditText) findViewById(R.id.editPw);
         editMsg = (EditText) findViewById(R.id.editMsg);
         textToken = (TextView) findViewById(R.id.textToken);
 
-        // 사용자 리스트 세팅
+        // 사용자 목록을 리스트 뷰에 설정
         listView = (ListView) findViewById(R.id.listView);
         adapter = new ListAdapter(this, datas);
         listView.setAdapter(adapter);
 
-        // 리스트를 클릭하면 사용자정보중에 token 값을 화면에 뿌린다
+        // 리스트를 클릭하면 리스트뷰의 포지션을 읽어와서
+        // 해당 사용자의 token 값을 화면에 뿌린다
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -66,10 +73,67 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendNotification(View view){
 
-        String msg = editMsg.getText().toString();
-        if(!"".equals(msg)){ // 입력값이 있으면 노티를 날려준다
-
+        final String sender = editId.getText().toString();
+        final String msg = editMsg.getText().toString();
+        final String token = textToken.getText().toString();
+        if("".equals(msg)){ // 입력값이 있으면 노티를 날려준다
+            Toast.makeText(this,"메시지를 입력하세요!",Toast.LENGTH_SHORT).show();
+            return;
+        }else if("".equals(token)){
+            Toast.makeText(this,"받는사람을 선택하세요!",Toast.LENGTH_SHORT).show();
+            return;
         }
+        new AsyncTask<Void,Void,String>(){
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String result = "";
+
+                // 1. 내 서버정보 세팅
+                String server_url = "http://192.168.1.208:8080/sendMsgToFCM.jsp";
+                // 2. 서버로 전송할 POST message 세팅
+                String post_data = "to_token=" + token + "&msg=" + msg + "&sender=" + sender;
+
+                try {
+                    // 3. HttpUrlConnection 을 사용해서 내 서버로 메시지를 전송한다
+                    //     a.서버연결
+                    URL url = new URL(server_url);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    //     b.header 설정
+                    con.setRequestMethod("POST");
+                    //     c.POST데이터(body) 전송
+                    con.setDoOutput(true);
+                    OutputStream os = con.getOutputStream();
+                    os.write(post_data.getBytes());
+                    os.flush();
+                    os.close();
+                    //     d.전송후 결과처리
+                    int responseCode = con.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) { // code 200
+                        // 결과처리후 내 서버에서 발송된 결과메시지를 꺼낸다.
+                        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                        String dataLine = "";
+                        // 메시지를 한줄씩 읽어서 result 변수에 담아두고
+                        while ((dataLine = br.readLine()) != null) {
+                            result = result + dataLine;
+                        }
+                        br.close();
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                // 결과처리된 메시지를 화면에 보여준다
+                Toast.makeText(MainActivity.this,result,Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
+
     }
 
     public void signIn(View view){

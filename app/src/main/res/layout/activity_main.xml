@@ -39,13 +39,13 @@
         android:onClick="signIn" />
 
     <ListView
-        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_above="@+id/textToken"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/btnSignin" />
+        android:id="@+id/listView"
+        android:layout_below="@+id/btnSignin"
+        android:layout_above="@+id/textToken" />
 
     <TextView
         android:text="Token"
